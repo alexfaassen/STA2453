@@ -88,24 +88,24 @@ def kepler_flare(tt, t_half, n,
     """
     tt = np.asarray(tt)
     flare = np.zeros_like(tt, dtype=float)
-    states = np.ones_like(tt, dtype=int)  # baseline=1
+    # states = np.ones_like(tt, dtype=int)  # baseline=1
 
     # Draw random flare amplitudes
-    flux_all = flux_dist(n=n, **dist_kwargs)
+    flare_amps = flux_dist(n=n, **dist_kwargs) # Pareto distribution
 
     # Choose random times for the flare peaks
     # R's sample(tt, n) is sampling w/o replacement by default.
     # For large n < len(tt), that may matter, but we can do the same:
-    peak_time_all = np.random.choice(tt, size=n, replace=False)
+    peak_times = np.random.choice(tt, size=n, replace=False)
     # Sort them if you want them in ascending order:
-    peak_time_all.sort()
+    peak_times.sort()
 
     # Loop through each flare
     for i in range(n):
-        flux_loc = flux_all[i]
+        flare_amp = flare_amps[i]
         # scale t_half by flux to produce a proportionally wider flare
-        t_half_loc = t_half * flux_loc
-        peak_time_loc = peak_time_all[i]
+        t_half_loc = t_half * flare_amp # Flare rise interval length
+        peak_time_loc = peak_times[i] # Peak time
 
         # Indices for the rise phase
         #  rise:   peak_time - t in [0, t_half_loc]
@@ -126,20 +126,21 @@ def kepler_flare(tt, t_half, n,
         )[0]
 
         # Tag the states
-        states[rising_phase] = 2
-        states[decaying_phase] = 3
+        # states[rising_phase] = 2
+        # states[decaying_phase] = 3
 
         # Compute scaled times within the rise/decay windows
+        # (Arguments to give to kepler_raising/decay functions)
         raise_time_loc = (tt[rising_phase] - peak_time_loc) / t_half_loc
         decay_time_loc = (tt[decaying_phase] - peak_time_loc) / t_half_loc
 
-        # Evaluate the flare shape, multiplied by flux_loc
+        # Evaluate the flare shape, multiplied by flare_amp
         # (Note that for the rise phase we expect negative scaled times.)
-        raise_flux = flux_loc * kepler_raising(raise_time_loc)
-        decay_flux = flux_loc * kepler_decay(decay_time_loc)
+        raise_flux = flare_amp * kepler_raising(raise_time_loc)
+        decay_flux = flare_amp * kepler_decay(decay_time_loc)
 
         # Add them into the 'flare' array
         flare[rising_phase] += raise_flux
         flare[decaying_phase] += decay_flux
 
-    return flare, states
+    return flare#, states
