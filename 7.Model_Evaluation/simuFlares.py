@@ -90,6 +90,9 @@ def kepler_flare(tt, t_half, n,
     flare = np.zeros_like(tt, dtype=float)
     # states = np.ones_like(tt, dtype=int)  # baseline=1
 
+    # We'll record flare start/end in this list
+    flare_times = []
+
     # Draw random flare amplitudes
     flare_amps = flux_dist(n=n, **dist_kwargs) # Pareto distribution
 
@@ -143,4 +146,12 @@ def kepler_flare(tt, t_half, n,
         flare[rising_phase] += raise_flux
         flare[decaying_phase] += decay_flux
 
-    return flare#, states
+        # Identify start/end times for this flare
+        if len(rising_phase) > 0 and len(decaying_phase) > 0:
+            start_i = rising_phase[0]
+            end_i = decaying_phase[-1]
+            # start_t = tt[start_i]
+            # end_t = tt[end_i]
+            flare_times.append((start_i, end_i))#((start_t, end_t))
+
+    return flare, flare_times #, states
