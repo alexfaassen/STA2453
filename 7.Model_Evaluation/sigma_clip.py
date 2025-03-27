@@ -23,6 +23,9 @@ def sigma_clip(y, sigma=3.0, consecutive_pts=1):
         A binary array of the same length as y, where 1 indicates
         the data point is flagged as flare/outlier, and 0 indicates normal.
     """
+    ## Initialize
+    # data = y.copy()
+
     y = np.asarray(y)
     # 1) Compute overall mean & std
     mu = np.mean(y)
@@ -52,5 +55,10 @@ def sigma_clip(y, sigma=3.0, consecutive_pts=1):
                     i += 1
             else:
                 i += 1
+
+    # # Save
+    # data['anomaly'] = flares.ravel()
+    # data['anomaly'] = data['anomaly'].map({1: 0, -1: 1})
+    # data['anomaly_score'] = scores
 
     return flares
