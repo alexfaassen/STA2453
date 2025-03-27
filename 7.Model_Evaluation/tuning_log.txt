@@ -1,0 +1,22 @@
+Tuning Log
+
+Flares: Standard
+xm = pdcsap['pdcsap_flux'].mean() * 0.02        # Scale (~ x_min): Baseline amplitude (values will rarely be smaller than this)
+alpha = 2                                       # Shape: smaller => heavier tail = more large flares
+offset = 0                                      # Offset amplitudes (shift)
+upper = pdcsap['pdcsap_flux'].mean() * 0.1      # Amplitude cap
+Params:
+contamination = 0.001 # Expected proportion of anomalies
+n_estimators = 100 # Number of trees
+sample_size = 256 # Number of samples used to train each tree
+Output:
+After 100 runs:
+STLIF:
+  Avg Precision: 0.980
+  Avg Recall:    0.830
+  Avg F1 Score:  0.886
+3-3sigma:
+  Avg Precision: 0.850
+  Avg Recall:    0.292
+  Avg F1 Score:  0.420
+
