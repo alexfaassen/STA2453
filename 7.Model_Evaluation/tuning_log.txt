@@ -20,3 +20,58 @@ STLIF:
   Avg Recall:    0.292
   Avg F1 Score:  0.420
 
+Flares: Standard
+Params:
+# Expected proportion of anomalies
+contamination_values = [0.001, 0.005, 0.01, 0.02]
+# Number of trees
+n_estimators_values = [100, 200]
+# Number of samples used to train each tree
+max_samples_values = [256, "auto"]
+## Simulate
+n_runs = 10 # Number of simulations
+Output:
+Top 5 Hyperparam Combos (by F1):
+{'contamination': 0.001, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.9199999999999999, 'avg_f1_score': 0.946031746031746}
+{'contamination': 0.001, 'n_estimators': 200, 'max_samples': 256, 'avg_precision': 1.0, 'avg_recall': 0.86, 'avg_f1_score': 0.9166666666666667}
+{'contamination': 0.001, 'n_estimators': 100, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.86, 'avg_f1_score': 0.909920634920635}
+{'contamination': 0.001, 'n_estimators': 100, 'max_samples': 256, 'avg_precision': 1.0, 'avg_recall': 0.8400000000000001, 'avg_f1_score': 0.898809523809524}
+{'contamination': 0.005, 'n_estimators': 200, 'max_samples': 256, 'avg_precision': 0.36827660643450116, 'avg_recall': 1.0, 'avg_f1_score': 0.5184549498754896}
+
+Flares: Standard
+Params:
+# Expected proportion of anomalies
+contamination_values = [0.001, 0.002, 0.003, 0.004]
+# Number of trees
+n_estimators_values = [100, 200, 300]
+# Number of samples used to train each tree
+max_samples_values = ["auto"]
+## Simulate
+n_runs = 10 # Number of simulations
+Output:
+Top 5 Hyperparam Combos (by F1):
+{'contamination': 0.001, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.9600000000000002, 'avg_f1_score': 0.9777777777777779}
+{'contamination': 0.001, 'n_estimators': 300, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.8800000000000001, 'avg_f1_score': 0.9238095238095237}
+{'contamination': 0.001, 'n_estimators': 100, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.8200000000000001, 'avg_f1_score': 0.8809523809523808}
+{'contamination': 0.002, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 0.8, 'avg_recall': 0.9800000000000001, 'avg_f1_score': 0.8607503607503608}
+{'contamination': 0.002, 'n_estimators': 300, 'max_samples': 'auto', 'avg_precision': 0.7753968253968254, 'avg_recall': 1.0, 'avg_f1_score': 0.8595238095238095}
+{'contamination': 0.002, 'n_estimators': 100, 'max_samples': 'auto', 'avg_precision': 0.7700396825396825, 'avg_recall': 0.9800000000000001, 'avg_f1_score': 0.8458485958485958}
+
+
+Flares: Standard
+Params:
+# Expected proportion of anomalies
+contamination_values = [0.001, 0.0009, 0.0008, 0.0011, 0.0012]
+# Number of trees
+n_estimators_values = [200]
+# Number of samples used to train each tree
+max_samples_values = ["auto"]
+## Simulate
+n_runs = 10 # Number of simulations
+Output:
+Top 5 Hyperparam Combos (by F1):
+{'contamination': 0.001, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.96, 'avg_f1_score': 0.9777777777777779}
+{'contamination': 0.0011, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.9400000000000001, 'avg_f1_score': 0.9638888888888889}
+{'contamination': 0.0012, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 0.9833333333333334, 'avg_recall': 0.9399999999999998, 'avg_f1_score': 0.9575757575757577}
+{'contamination': 0.0009, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.9199999999999999, 'avg_f1_score': 0.9555555555555557}
+{'contamination': 0.0008, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.7999999999999999, 'avg_f1_score': 0.8888888888888891}
