@@ -75,3 +75,163 @@ Top 5 Hyperparam Combos (by F1):
 {'contamination': 0.0012, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 0.9833333333333334, 'avg_recall': 0.9399999999999998, 'avg_f1_score': 0.9575757575757577}
 {'contamination': 0.0009, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.9199999999999999, 'avg_f1_score': 0.9555555555555557}
 {'contamination': 0.0008, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.7999999999999999, 'avg_f1_score': 0.8888888888888891}
+
+Flares: Standard
+Params:
+Same as above, but n_runs = 25
+Output:
+Top 5 Hyperparam Combos (by F1):
+{'contamination': 0.0012, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.92, 'avg_f1_score': 0.9522222222222223}
+{'contamination': 0.0011, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 0.9599999999999999, 'avg_recall': 0.9440000000000002, 'avg_f1_score': 0.9467676767676768}
+{'contamination': 0.001, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.912, 'avg_f1_score': 0.9461904761904762}
+{'contamination': 0.0009, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.9040000000000002, 'avg_f1_score': 0.9422222222222223}
+{'contamination': 0.0008, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 0.7200000000000003, 'avg_f1_score': 0.8274603174603176}
+
+Flares: High
+xm = pdcsap['pdcsap_flux'].mean() * 0.05        # Scale (~ x_min): Baseline amplitude (values will rarely be smaller than this)
+alpha = 2                                       # Shape: smaller => heavier tail = more large flares
+offset = 0                                      # Offset amplitudes (shift)
+upper = pdcsap['pdcsap_flux'].mean() * 0.25     # Amplitude cap
+Params:
+contamination = 0.0012 # Expected proportion of anomalies
+n_estimators = 200 # Number of trees
+sample_size = "auto" # Number of samples used to train each tree
+Output:
+After 100 runs:
+STLIF:
+  Avg Precision: 1.000
+  Avg Recall:    0.838
+  Avg F1 Score:  0.893
+3-3sigma:
+  Avg Precision: 0.998
+  Avg Recall:    0.890
+  Avg F1 Score:  0.934
+
+Flares: High
+Params:
+# Expected proportion of anomalies
+contamination_values = [0.001, 0.0025, 0.004]
+# Number of trees
+n_estimators_values = [100, 200, 300]
+# Number of samples used to train each tree
+max_samples_values = [256, "auto"]
+## Simulate
+n_runs = 10 # Number of simulations
+Output:
+Top 5 Hyperparam Combos (by F1):
+{'contamination': 0.0025, 'n_estimators': 100, 'max_samples': 256, 'avg_precision': 1.0, 'avg_recall': 1.0, 'avg_f1_score': 1.0}
+{'contamination': 0.004, 'n_estimators': 100, 'max_samples': 'auto', 'avg_precision': 1.0, 'avg_recall': 1.0, 'avg_f1_score': 1.0}
+{'contamination': 0.004, 'n_estimators': 200, 'max_samples': 256, 'avg_precision': 1.0, 'avg_recall': 1.0, 'avg_f1_score': 1.0}
+{'contamination': 0.0025, 'n_estimators': 200, 'max_samples': 256, 'avg_precision': 1.0, 'avg_recall': 0.9800000000000001, 'avg_f1_score': 0.9888888888888889}
+{'contamination': 0.0025, 'n_estimators': 300, 'max_samples': 256, 'avg_precision': 1.0, 'avg_recall': 0.9800000000000001, 'avg_f1_score': 0.9888888888888889}
+
+Flares: Variety
+xm = pdcsap['pdcsap_flux'].mean() * 0.01 #0.05        # Scale (~ x_min): Baseline amplitude (values will rarely be smaller than this)
+alpha = 0.65 #2                                       # Shape: smaller => heavier tail = more large flares
+offset = 0                                      # Offset amplitudes (shift)
+upper = pdcsap['pdcsap_flux'].mean() * 0.15 #0.25     # Amplitude cap
+Params:
+# Expected proportion of anomalies
+contamination_values = [0.0025, 0.003, 0.0035, 0.004]
+# Number of trees
+n_estimators_values = [100, 200, 300]
+# Number of samples used to train each tree
+max_samples_values = [256, "auto"]
+## Simulate
+n_runs = 25 # Number of simulations
+Output:
+Top 10 Hyperparam Combos (by F1):
+{'contamination': 0.003, 'n_estimators': 300, 'max_samples': 256, 'avg_precision': 0.7987273837273837, 'avg_recall': 0.8640000000000001, 'avg_f1_score': 0.7832019614372556}
+{'contamination': 0.0025, 'n_estimators': 100, 'max_samples': 'auto', 'avg_precision': 0.7392167832167833, 'avg_recall': 0.8560000000000003, 'avg_f1_score': 0.7445350662409487}
+{'contamination': 0.003, 'n_estimators': 100, 'max_samples': 256, 'avg_precision': 0.7023088023088022, 'avg_recall': 0.8640000000000001, 'avg_f1_score': 0.7389832097726835}
+{'contamination': 0.0025, 'n_estimators': 200, 'max_samples': 256, 'avg_precision': 0.7276934176934178, 'avg_recall': 0.8400000000000002, 'avg_f1_score': 0.7340079854785738}
+{'contamination': 0.0025, 'n_estimators': 300, 'max_samples': 'auto', 'avg_precision': 0.7008091908091907, 'avg_recall': 0.8560000000000002, 'avg_f1_score': 0.7240639752404457}
+{'contamination': 0.003, 'n_estimators': 200, 'max_samples': 256, 'avg_precision': 0.7419682539682539, 'avg_recall': 0.7920000000000001, 'avg_f1_score': 0.7184362558665963}
+{'contamination': 0.0025, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 0.6739972249972248, 'avg_recall': 0.856, 'avg_f1_score': 0.7036851971557855}
+{'contamination': 0.0035, 'n_estimators': 200, 'max_samples': 256, 'avg_precision': 0.6753229907347554, 'avg_recall': 0.8320000000000001, 'avg_f1_score': 0.693490776853006}
+{'contamination': 0.0025, 'n_estimators': 100, 'max_samples': 256, 'avg_precision': 0.6702417582417582, 'avg_recall': 0.8320000000000002, 'avg_f1_score': 0.689645165292224}
+{'contamination': 0.0035, 'n_estimators': 300, 'max_samples': 256, 'avg_precision': 0.6427312197606315, 'avg_recall': 0.8400000000000002, 'avg_f1_score': 0.6800247234705438}
+
+Flares: Variety
+Params:
+contamination = 0.0025 # Expected proportion of anomalies
+n_estimators = 100 # Number of trees
+sample_size = "auto" # Number of samples used to train each tree
+Output:
+After 100 runs:
+STLIF:
+  Avg Precision: 0.755
+  Avg Recall:    0.792
+  Avg F1 Score:  0.718
+3-3sigma:
+  Avg Precision: 0.850
+  Avg Recall:    0.288
+  Avg F1 Score:  0.413
+
+Flares: Low
+xm = pdcsap['pdcsap_flux'].mean() * 0.005 #0.01 #0.05           # Scale (~ x_min): Baseline amplitude (values will rarely be smaller than this)
+alpha = 1.5 #0.65 #2                                            # Shape: smaller => heavier tail = more large flares
+offset = 0                                                      # Offset amplitudes (shift)
+upper = pdcsap['pdcsap_flux'].mean() * 0.05 #0.15 #0.25         # Amplitude cap
+Params:
+# Expected proportion of anomalies
+contamination_values = [0.001, 0.002, 0.0035, 0.005]
+# Number of trees
+n_estimators_values = [100, 200, 300]
+# Number of samples used to train each tree
+max_samples_values = ["auto"]
+## Simulate
+n_runs = 25 # Number of simulations
+Output:
+Top 5 Hyperparam Combos (by F1):
+{'contamination': 0.001, 'n_estimators': 300, 'max_samples': 'auto', 'avg_precision': 0.44066666666666665, 'avg_recall': 0.39199999999999996, 'avg_f1_score': 0.41288888888888875}
+{'contamination': 0.001, 'n_estimators': 100, 'max_samples': 'auto', 'avg_precision': 0.392, 'avg_recall': 0.32000000000000006, 'avg_f1_score': 0.3486666666666667}
+{'contamination': 0.002, 'n_estimators': 100, 'max_samples': 'auto', 'avg_precision': 0.2692380952380952, 'avg_recall': 0.45600000000000007, 'avg_f1_score': 0.3363090243090243}
+{'contamination': 0.001, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 0.3380000000000002, 'avg_recall': 0.3200000000000001, 'avg_f1_score': 0.3280000000000001}
+{'contamination': 0.002, 'n_estimators': 200, 'max_samples': 'auto', 'avg_precision': 0.22125396825396826, 'avg_recall': 0.4000000000000001, 'avg_f1_score': 0.28414652014652014}
+
+Flares: Low
+Params:
+contamination = 0.001 # Expected proportion of anomalies
+n_estimators = 300 # Number of trees
+sample_size = "auto" # Number of samples used to train each tree
+Output:
+After 100 runs:
+STLIF:
+  Avg Precision: 0.424
+  Avg Recall:    0.376
+  Avg F1 Score:  0.394
+3-3sigma:
+  Avg Precision: 0.150
+  Avg Recall:    0.030
+  Avg F1 Score:  0.050
+
+Flares: Low
+Params:
+Same as above
+Output:
+STLIF:
+  Avg Precision: 0.455
+  Avg Recall:    0.404
+  Avg F1 Score:  0.424
+1-3sigma:<--- Difference is 1-3sigma
+  Avg Precision: 0.035
+  Avg Recall:    0.672
+  Avg F1 Score:  0.067
+
+Flares: Variety
+Params:
+contamination = 0.0025 # Expected proportion of anomalies
+n_estimators = 100 # Number of trees
+sample_size = "auto" # Number of samples used to train each tree
+Output:
+After 100 runs:
+STLIF:
+  Avg Precision: 0.699
+  Avg Recall:    0.790
+  Avg F1 Score:  0.689
+3-3sigma:
+  Avg Precision: 0.175
+  Avg Recall:    0.952
+  Avg F1 Score:  0.260
+
