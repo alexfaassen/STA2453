@@ -53,8 +53,4 @@ def sigma_clip(y, sigma=3.0, consecutive_pts=1):
             else:
                 i += 1
 
-    # Save
-    data = y.copy()
-    data['anomaly'] = np.asarray(flares).ravel()
-
-    return data
+    return flares
