@@ -235,3 +235,39 @@ STLIF:
   Avg Recall:    0.952
   Avg F1 Score:  0.260
 
+Flares: Variety
+Params:
+contamination = 0.0025 # Expected proportion of anomalies
+n_estimators = 100 # Number of trees
+sample_size = "auto" # Number of samples used to train each tree
+# Detrending = True
+detrend = False <---- Difference, no detrending
+Output:
+After 100 runs:
+STLIF:
+  Avg Precision: 0.744
+  Avg Recall:    0.778
+  Avg F1 Score:  0.704
+3-3sigma: <-- Bugged
+  Avg Precision: 0.000
+  Avg Recall:    0.000
+  Avg F1 Score:  0.000
+
+Flares: Low
+Params:
+contamination = 0.0025 # Expected proportion of anomalies
+n_estimators = 100 # Number of trees
+sample_size = "auto" # Number of samples used to train each tree
+# Detrending = True
+detrend = False <---- Difference, no detrending
+Output:
+After 100 runs:
+STLIF:
+  Avg Precision: 0.175
+  Avg Recall:    0.418
+  Avg F1 Score:  0.246
+3-3sigma: <-- Bugged
+  Avg Precision: 0.000
+  Avg Recall:    0.000
+  Avg F1 Score:  0.000
+
