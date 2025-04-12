@@ -3,6 +3,20 @@ from sklearn.ensemble import IsolationForest
 
 
 def STLIF(data, contamination, detrend=True, n_estimators=100, sample_size=256):
+    """
+    Applies STL decomposition (optional) and runs Isolation Forest for anomaly detection.
+
+    Parameters:
+        data (pd.DataFrame): Time series data with one column (brightness).
+        contamination (float): The expected proportion of outliers.
+        detrend (bool): Whether to apply STL decomposition to isolate residuals.
+        n_estimators (int): Number of trees in the Isolation Forest.
+        sample_size (int): Subsample size for each tree.
+
+    Returns:
+        pd.DataFrame: Input data with added columns for anomaly labels and scores.
+    """
+
     ## Initialize
     data = data.copy()
 
