@@ -4,6 +4,8 @@ This repository contains a term project for STA2453 (WINTER 2025) at the Univers
 
 **Project Manager:** [STA2453 - Project Board](https://voracious-cereal-782.notion.site/1438b211751680248c78eaaaf45572ac?v=4aad22e7653a46b6aa719c4dfa2ed213)
 
+**Style Guide:** [Google Python Style Guide](https://google.github.io/styleguide/pyguide)
+
 ---
 
 ## Project Overview
