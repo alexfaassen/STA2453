@@ -1,28 +1,38 @@
-import numpy as np
+"""simulate_flare.py
 
-def rpareto(n, xm=1.0, alpha=1.0, offset=0.0, upper=np.inf):
+Generates synthetic stellar flares based on the Kepler flare model
+(Davenport et al., 2014). Includes functions for custom random sampling
+and flare injection using rise- and decay- phase polynomials.
+"""
+
+import numpy as np
+from typing import Callable, Tuple, List
+
+def rpareto(
+    n: int,
+    xm: float = 1.0,
+    alpha: float = 1.0,
+    offset: float = 0.0,
+    upper: float = np.inf
+) -> np.ndarray:
     """
     Draw 'n' samples from a Pareto distribution with scale xm and shape alpha,
     shift them by 'offset', and reject any above 'upper'.
-
-    Equivalent to the R version:
-       x_temp <- xm / (U^(1/alpha)) + offset
-       keep only x_temp <= upper
     """
     samples = []
     while len(samples) < n:
         needed = n - len(samples)
-        # uniform(0, 1)
+        # Uniform(0, 1)
         u = np.random.random(needed)
         x_temp = xm / (u ** (1 / alpha)) + offset
-        # filter by 'upper'
+        # Upper filter
         x_temp = x_temp[x_temp <= upper]
-        # append
+
         samples.append(x_temp)
     return np.concatenate(samples)[:n]
 
 
-def rmovexp(n, rate=1.0, offset=0.0):
+def rmovexp(n: int, rate: float = 1.0, offset: float = 0.0) -> np.ndarray:
     """
     Return 'n' samples from an exponential with 'rate' (1/scale),
     shifted by 'offset'.
@@ -31,7 +41,7 @@ def rmovexp(n, rate=1.0, offset=0.0):
     return offset + np.random.exponential(scale, size=n)
 
 
-def kepler_raising(x):
+def kepler_raising(x: np.ndarray) -> np.ndarray:
     """
     Kepler flare RISE phase polynomial from Davenport et al. (2014).
     Expects x in [ -1, 0 ] when scaled by t_half.
@@ -43,7 +53,7 @@ def kepler_raising(x):
             - 1.125 * x**4)
 
 
-def kepler_decay(x):
+def kepler_decay(x: np.ndarray) -> np.ndarray:
     """
     Kepler flare DECAY phase from Davenport et al. (2014).
     Modeled as the sum of two exponentials.
@@ -52,9 +62,13 @@ def kepler_decay(x):
             + 0.3030 * np.exp(-0.2783 * x))
 
 
-def kepler_flare(tt, t_half, n,
-                 flux_dist=rpareto,
-                 **dist_kwargs):
+def kepler_flare(
+    tt: np.ndarray,
+    t_half: float,
+    n: int,
+    flux_dist: Callable[..., np.ndarray] = rpareto,
+    **dist_kwargs
+) -> Tuple[np.ndarray, List[Tuple[int, int]]]:
     """
     Generate 'n' flares sampled in time over the array 'tt'.
     Each flare uses the classical Kepler-rise and Kepler-decay shape,
@@ -80,78 +94,56 @@ def kepler_flare(tt, t_half, n,
     -------
     flare : ndarray
         The synthetic flare light curve (same length as 'tt').
-    states : ndarray
-        An integer array indicating the “state” at each time:
-          1 => baseline,
-          2 => within a flare’s rise,
-          3 => within a flare’s decay.
+    flare_times: List[Tuple[int, int]]
+        List of (start_idx, end_idx) for each flare.
     """
+
+    ## Initialize
     tt = np.asarray(tt)
     flare = np.zeros_like(tt, dtype=float)
-    # states = np.ones_like(tt, dtype=int)  # baseline=1
-
-    # We'll record flare start/end in this list
     flare_times = []
 
-    # Draw random flare amplitudes
+    ## Flare amplitudes
     flare_amps = flux_dist(n=n, **dist_kwargs) # Pareto distribution
 
-    # Choose random times for the flare peaks
-    # R's sample(tt, n) is sampling w/o replacement by default.
-    # For large n < len(tt), that may matter, but we can do the same:
+    ## Flare peak times (SRSWOR)
     peak_times = np.random.choice(tt, size=n, replace=False)
-    # Sort them if you want them in ascending order:
     peak_times.sort()
 
-    # Loop through each flare
+    ## Iterate: Create flares
     for i in range(n):
         flare_amp = flare_amps[i]
         # scale t_half by flux to produce a proportionally wider flare
         t_half_loc = t_half * flare_amp # Flare rise interval length
         peak_time_loc = peak_times[i] # Peak time
 
-        # Indices for the rise phase
-        #  rise:   peak_time - t in [0, t_half_loc]
-        #  => 0 <= peak_time_loc - t <= t_half_loc
-        #  => peak_time_loc - t_half_loc <= t <= peak_time_loc
+        # Rising phase: peak_time - t_half_i to peak_time
         rising_phase = np.where(
             (tt <= peak_time_loc) &
             (tt >= peak_time_loc - t_half_loc)
         )[0]
 
-        # Indices for the decay phase
-        #  decay:  t - peak_time in [0, 10 * t_half_loc]
-        #  => 0 <= t - peak_time_loc <= 10 * t_half_loc
-        #  => peak_time_loc <= t <= peak_time_loc + 10*t_half_loc
+        # Decay phase: peak_time to peak_time + 10 * t_half_i
         decaying_phase = np.where(
             (tt >= peak_time_loc) &
             (tt <= peak_time_loc + 10.0 * t_half_loc)
         )[0]
 
-        # Tag the states
-        # states[rising_phase] = 2
-        # states[decaying_phase] = 3
-
-        # Compute scaled times within the rise/decay windows
-        # (Arguments to give to kepler_raising/decay functions)
+        # Scaled times
         raise_time_loc = (tt[rising_phase] - peak_time_loc) / t_half_loc
         decay_time_loc = (tt[decaying_phase] - peak_time_loc) / t_half_loc
 
-        # Evaluate the flare shape, multiplied by flare_amp
-        # (Note that for the rise phase we expect negative scaled times.)
+        # Flare shape
         raise_flux = flare_amp * kepler_raising(raise_time_loc)
         decay_flux = flare_amp * kepler_decay(decay_time_loc)
 
-        # Add them into the 'flare' array
         flare[rising_phase] += raise_flux
         flare[decaying_phase] += decay_flux
 
-        # Identify start/end times for this flare
+        # Start/end times
         if len(rising_phase) > 0 and len(decaying_phase) > 0:
             start_i = rising_phase[0]
             end_i = decaying_phase[-1]
-            # start_t = tt[start_i]
-            # end_t = tt[end_i]
-            flare_times.append((start_i, end_i))#((start_t, end_t))
+            flare_times.append((start_i, end_i))
 
-    return flare, flare_times #, states
+    return flare, flare_times

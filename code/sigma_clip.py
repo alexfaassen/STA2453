@@ -1,6 +1,17 @@
-import numpy as np
+"""sigma_clip.py
 
-def sigma_clip(y, sigma=3.0, consecutive_pts=1):
+Implements a simple a-bsigma-clipping model to detect flares or outliers
+in 1D time series data.
+"""
+
+import numpy as np
+from typing import Union
+
+def sigma_clip(
+    y: Union[np.ndarray, list],
+    sigma: float = 3.0,
+    consecutive_pts: int = 3
+) -> np.ndarray:
     """
     Detect flares (or outliers) in array y via a basic sigma-clipping rule.
     
@@ -27,14 +38,14 @@ def sigma_clip(y, sigma=3.0, consecutive_pts=1):
     # data = y.copy()
 
     y = np.asarray(y)
-    # 1) Compute overall mean & std
+    ## Compute overall mean & std
     mu = np.mean(y)
     sd = np.std(y)
     
-    # 2) Create a mask of outliers: True if outside ± sigma * sd
+    ## Create a mask of outliers: True if outside +/- sigma * sd
     mask_outlier = np.abs(y - mu) > sigma * sd
     
-    # 3) Optionally enforce 'consecutive_pts' requirement
+    ## Optional: Enforce 'consecutive_pts' requirement
     flares = np.zeros_like(y, dtype=int)
     if consecutive_pts <= 1:
         flares[mask_outlier] = 1
@@ -49,7 +60,6 @@ def sigma_clip(y, sigma=3.0, consecutive_pts=1):
                 if block_end <= n and all(mask_outlier[i:block_end]):
                     # Mark them as flares
                     flares[i:block_end] = 1
-                    # Optionally skip ahead beyond the block
                     i = block_end
                 else:
                     i += 1

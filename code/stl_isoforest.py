@@ -1,8 +1,24 @@
+"""stl_isoforest.py
+
+Contains function to apply STL decomposition and fit an Isolation Forest
+model for anomaly detection in brightness time series data.
+"""
+
 from statsmodels.tsa.seasonal import STL
 from sklearn.ensemble import IsolationForest
+import pandas as pd
+from typing import Union
 
+# STL period based on EDA (e.g., known cadence = 2 min, daily = 720; periodicity ~4 hrs = 240)
+STL_PERIOD = 240
 
-def STLIF(data, contamination, detrend=True, n_estimators=100, sample_size=256):
+def STLIF(
+    data: pd.DataFrame,
+    contamination: Union[float, str],
+    detrend: bool = True,
+    n_estimators: int = 100,
+    sample_size: int = 256
+) -> pd.DataFrame:
     """
     Applies STL decomposition (optional) and runs Isolation Forest for anomaly detection.
 
@@ -20,23 +36,20 @@ def STLIF(data, contamination, detrend=True, n_estimators=100, sample_size=256):
     ## Initialize
     data = data.copy()
 
-    
     ## STL Decomposition
     if detrend:
-        stl = STL(data, period=240, robust=True)  # Use period=240 based on EDA
+        stl = STL(data, period=STL_PERIOD, robust=True)  # Use period=240 based on EDA
         decomposition = stl.fit()
         data = decomposition.resid.to_frame()
 
-        # decomposition.plot()
-
-
-    ## Run Model
-    # Isolation Forest
-    model = IsolationForest(n_estimators = n_estimators, contamination = contamination, max_samples = sample_size)
-    #contamination = 'auto', random_state = 42)
-    # random_state: for reproducibility.
+    ## Isolation Forest Model
+    model = IsolationForest(
+        n_estimators = n_estimators,
+        contamination = contamination,
+        max_samples = sample_size
+    )
     train = data[[data.columns[0]]].values
-    model.fit(train) #data
+    model.fit(train)
 
     # Predict anomalies
     anomalies = model.predict(train)

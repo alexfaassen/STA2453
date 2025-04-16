@@ -1,6 +1,18 @@
-import numpy as np
+"""evaluate_flare.py
 
-def flares_overlap(true_flare, detected_flare):
+Provides utility functions to evaluate event-level performance of flare detection models.
+Includes methods to convert binary predictions into flare intervals and compute
+precision, recall, and F1-score based on time overlap.
+"""
+
+import numpy as np
+from typing import List, Tuple
+
+
+def flares_overlap(
+    true_flare: Tuple[float, float],
+    detected_flare: Tuple[float, float]
+) -> bool:
     """
     Returns True if there's any time-overlap between a 'true_flare' and a 'detected_flare'.
     Each flare is a tuple (start_time, end_time).
@@ -13,7 +25,7 @@ def flares_overlap(true_flare, detected_flare):
     return not no_overlap
 
 
-def binary_to_intervals(y_pred):
+def binary_to_intervals(y_pred: np.ndarray) -> List[Tuple[float, float]]:
     """
     Convert a binary (0/1) array 'y_pred' into a list of intervals (start_t, end_t),
     by grouping consecutive 1's. 'tt' is the time array aligned with y_pred.
@@ -42,7 +54,10 @@ def binary_to_intervals(y_pred):
     return intervals
 
 
-def event_level_scores(real_flares, y_pred):
+def event_level_scores(
+    real_flares: List[Tuple[float, float]],
+    y_pred: np.ndarray
+) -> Tuple[float, float, float]:
     """
     Compute event-level Precision, Recall, F1 for flare detection when
     'y_pred' is a binary array of length == len(tt) (e.g., anomalies from an Isolation Forest).
