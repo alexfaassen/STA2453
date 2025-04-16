@@ -34,7 +34,7 @@ This repository contains a term project for STA2453 (WINTER 2025) at the Univers
         - `isolation_forest`: initial exploration of Isolation Forest model.
         - `flare_simulation`: tests for `simulate_flare.py` module.
         - `model_evaluation`: tests for `evaluate_flare`, `stl_isoforest`, and `sigma_clip` modules.
-        - `simulations`: repeated injection-recovery experiments involving (1) hyperparameter tuning and (2) model comparisons.
+        - `simulations`: repeated injection-recovery experiments involving (1) hyperparameter tuning and (2) model comparisons (simulation notes kept in `tuning_log.txt`).
     - **Python Modules** (`.py`) are where all supporting functions are stored, to be imported into the Notebooks.
         - `stl_isoforest`: combining STL decomposition + Isolation Forest approach into a single function, `STLIF`.
         - `simulate_flare`: functions for generating flares, i.e. `kepler_flare` and all its supporting functions.
